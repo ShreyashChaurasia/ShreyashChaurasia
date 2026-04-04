@@ -1,0 +1,333 @@
+KALI TERMINALIZER GUIDE FOR YOUR GITHUB PROFILE README
+
+Goal:
+Create an animated terminal GIF on Kali Linux using Terminalizer, then place that GIF inside your GitHub profile README.
+
+This guide uses Terminalizer's floating frame setting, so the final recording appears inside a floating terminal window instead of a plain edge-to-edge terminal capture.
+
+Important note:
+GitHub README files do not run JavaScript players, so use a GIF, not the Terminalizer web player.
+
+--------------------------------------------------
+1. Open Kali and go to your profile README repo
+--------------------------------------------------
+
+Open a terminal and run:
+
+cd ~/ShreyashChaurasia
+
+If your repo is not there yet:
+
+git clone https://github.com/ShreyashChaurasia/ShreyashChaurasia.git ~/ShreyashChaurasia
+cd ~/ShreyashChaurasia
+
+--------------------------------------------------
+2. Install dependencies on Kali
+--------------------------------------------------
+
+Kali is Debian-based, so this setup is the safest:
+
+sudo apt update
+sudo apt install -y curl git build-essential python3
+
+Optional but useful if rendering later complains about missing GUI libraries:
+
+sudo apt install -y libgtk-3-0 libnotify4 libnss3 libxss1 libxtst6 libatspi2.0-0 libdrm2 libgbm1 libasound2 xdg-utils
+
+--------------------------------------------------
+3. Install nvm and Node 16
+--------------------------------------------------
+
+Terminalizer is much more reliable on Node 16 than on very new Node versions.
+
+Install nvm:
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+Reload your shell:
+
+source ~/.bashrc
+
+Install and use Node 16:
+
+nvm install 16.20.2
+nvm use 16.20.2
+node -v
+npm -v
+
+You should now see a Node 16.x version.
+
+--------------------------------------------------
+4. Install Terminalizer
+--------------------------------------------------
+
+npm install -g terminalizer
+terminalizer --help
+
+If this works, you are ready.
+
+--------------------------------------------------
+5. Create folders for the recording and final GIF
+--------------------------------------------------
+
+cd ~/ShreyashChaurasia
+mkdir -p assets/terminalizer
+mkdir -p ~/profile-readme-demo-home/.config
+
+--------------------------------------------------
+6. Create the text files that your fake terminal session will read
+--------------------------------------------------
+
+Run these commands exactly:
+
+cat > ~/profile-readme-demo-home/.config/role <<'EOF'
+AI/ML Enthusiast | Full Stack Developer | Competitive Programmer
+EOF
+
+cat > ~/profile-readme-demo-home/.config/projects <<'EOF'
+ - Stock Market Analyzer (ML-based prediction + CLI)
+ - AI-powered Backend Systems (FastAPI + ML integration)
+ - Data Pipelines & Automation Scripts
+EOF
+
+cat > ~/profile-readme-demo-home/.config/tools <<'EOF'
+yfinance    scikit-learn    pandas         numpy
+PyTorch     TensorFlow      HuggingFace    Transformers
+FastAPI     PostgreSQL      MySQL          Docker
+Kubernetes  Nginx           GitHub Actions GCP
+Azure       LangChain       FAISS          n8n
+EOF
+
+cat > ~/profile-readme-demo-home/.config/learning <<'EOF'
+Currently exploring:
+ - LLMs & AI Agents
+ - System Design for scalable ML systems
+EOF
+
+cat > ~/profile-readme-demo-home/.config/contact <<'EOF'
+Email:    shreyashchaurasia.work@gmail.com
+LinkedIn: linkedin.com/in/shreyashchaurasia
+GitHub:   github.com/ShreyashChaurasia
+EOF
+
+--------------------------------------------------
+7. Create a custom Bash startup file for the recording
+--------------------------------------------------
+
+This is the key step. It gives you:
+- the custom prompt: ShreyashChaurasia@github:~$
+- a fake "whoami" result that matches your README
+- a fake "ls ~/skills" output that matches your README
+- a fake "tail -n 1 /var/log/development.log" output
+
+Create this file:
+
+cat > ~/profile-readme-demo-home/terminalizer-shell.sh <<'EOF'
+cd "$HOME"
+export PS1='ShreyashChaurasia@github:~$ '
+
+whoami() {
+  printf 'Shreyash Chaurasia\n'
+}
+
+ls() {
+  if [ "$1" = "$HOME/skills" ]; then
+    printf '%-14s %-18s %s\n' "Python" "C++" "C"
+    printf '%-14s %-18s %s\n' "TypeScript" "JavaScript" "HTML/CSS"
+    printf '%-14s %-18s %s\n' "DSA" "Machine Learning" "Deep Learning"
+    printf '%-14s %-18s %s\n' "REST APIs" "Backend Dev" "System Design"
+  else
+    command ls "$@"
+  fi
+}
+
+tail() {
+  if [ "$1" = "-n" ] && [ "$2" = "1" ] && [ "$3" = "/var/log/development.log" ]; then
+    printf '[INFO] Currently pushing the boundaries of AI-driven systems.\n'
+  else
+    command tail "$@"
+  fi
+}
+
+clear
+EOF
+
+--------------------------------------------------
+8. Create the Terminalizer config file with a floating terminal frame
+--------------------------------------------------
+
+Go back to the repo:
+
+cd ~/ShreyashChaurasia
+
+Create config.yml:
+
+cat > config.yml <<'EOF'
+command: env HOME=/home/YOUR_KALI_USERNAME/profile-readme-demo-home bash --noprofile --norc --init-file /home/YOUR_KALI_USERNAME/profile-readme-demo-home/terminalizer-shell.sh
+cwd: /home/YOUR_KALI_USERNAME/profile-readme-demo-home
+cols: 92
+rows: 26
+recordDelay: 10
+frameDelay: auto
+maxIdleTime: 1200
+quality: 100
+repeat: 0
+cursorStyle: bar
+fontFamily: "Fira Code, monospace"
+fontSize: 14
+lineHeight: 1.2
+letterSpacing: 0
+frameBox:
+  type: floating
+  title: "ShreyashChaurasia@github:~"
+  style:
+    backgroundColor: "#0d1117"
+    border: "1px solid #30363d"
+    borderRadius: "12px"
+    boxShadow: "0 18px 45px rgba(0, 0, 0, 0.35)"
+    overflow: "hidden"
+    margin: "24px"
+EOF
+
+Now edit these lines and replace YOUR_KALI_USERNAME with your real Kali username:
+
+command: env HOME=/home/YOUR_KALI_USERNAME/profile-readme-demo-home bash --noprofile --norc --init-file /home/YOUR_KALI_USERNAME/profile-readme-demo-home/terminalizer-shell.sh
+cwd: /home/YOUR_KALI_USERNAME/profile-readme-demo-home
+
+Example:
+
+command: env HOME=/home/shrey/profile-readme-demo-home bash --noprofile --norc --init-file /home/shrey/profile-readme-demo-home/terminalizer-shell.sh
+cwd: /home/shrey/profile-readme-demo-home
+
+Important note about the floating frame:
+
+- This is the part that makes the recording appear inside a floating terminal window.
+- The key setting is: frameBox -> type: floating
+- The style block controls the look of that floating frame, such as rounded corners, shadow, margin, and border.
+- If you want a flatter look, reduce or remove boxShadow.
+- If you want the terminal window to fill more of the GIF canvas, reduce margin from 24px to 8px or 12px.
+- If you want a more GitHub-like dark terminal card, keep the backgroundColor, border, and shadow values as written.
+
+--------------------------------------------------
+9. Record the terminal session
+--------------------------------------------------
+
+Start recording:
+
+terminalizer record profile-readme -c config.yml
+
+A terminal window/session will start. Type these commands slowly, exactly in this order:
+
+whoami
+cat .config/role
+ls ~/skills
+cat .config/projects
+cat .config/tools
+cat .config/learning
+cat .config/contact
+tail -n 1 /var/log/development.log
+echo "Stay curious, stay compiled."
+exit
+
+Tips while recording:
+- Type naturally, not too fast.
+- Pause for about half a second after each command.
+- If you make a mistake, stop and re-record. It is usually faster than editing the YAML manually.
+
+--------------------------------------------------
+10. Preview the recording
+--------------------------------------------------
+
+terminalizer play profile-readme
+
+If it feels too slow:
+- lower maxIdleTime in config.yml
+- or re-record with faster typing
+
+--------------------------------------------------
+11. Render the final GIF
+--------------------------------------------------
+
+terminalizer render profile-readme -o assets/terminalizer/profile-terminal.gif
+
+Your GIF should now be here:
+
+assets/terminalizer/profile-terminal.gif
+
+--------------------------------------------------
+12. Optional: compress the GIF
+--------------------------------------------------
+
+If the GIF is too large, install gifsicle:
+
+sudo apt install -y gifsicle
+
+Then compress:
+
+gifsicle -O3 assets/terminalizer/profile-terminal.gif -o assets/terminalizer/profile-terminal.optimized.gif
+
+If the optimized version still looks good, rename it:
+
+mv assets/terminalizer/profile-terminal.optimized.gif assets/terminalizer/profile-terminal.gif
+
+--------------------------------------------------
+13. Put the GIF inside README.md
+--------------------------------------------------
+
+Open README.md and place this near the top:
+
+![Animated terminal intro](./assets/terminalizer/profile-terminal.gif)
+
+If you want, keep your existing fenced code block below the GIF as a static fallback.
+
+--------------------------------------------------
+14. Commit and push
+--------------------------------------------------
+
+git add README.md assets/terminalizer/profile-terminal.gif config.yml KALI_TERMINALIZER_GUIDE.txt
+git commit -m "Add Terminalizer guide and profile terminal animation"
+git push origin main
+
+--------------------------------------------------
+15. If something fails
+--------------------------------------------------
+
+If "terminalizer" is not found:
+- run: npm install -g terminalizer
+- then check: terminalizer --help
+
+If installation fails during npm build:
+- confirm you are on Node 16
+- confirm build tools are installed:
+  sudo apt install -y build-essential python3
+
+If render fails with missing shared library errors:
+- install the optional GUI libraries from step 2
+
+If the prompt does not look right:
+- recheck the path in config.yml
+- make sure terminalizer-shell.sh exists
+- make sure the command uses: bash --noprofile --norc --init-file ...
+
+If the floating frame does not appear:
+- make sure frameBox.type is set to floating
+- make sure frameBox is indented correctly in config.yml
+- make sure you are using terminalizer render profile-readme -o ...
+
+If you want the animation to match the README perfectly:
+- record first
+- then slightly adjust the README text to match the exact recorded output
+
+--------------------------------------------------
+16. Simplest successful workflow summary
+--------------------------------------------------
+
+1. Install Node 16 with nvm.
+2. Install Terminalizer globally.
+3. Create the fake .config files.
+4. Create terminalizer-shell.sh.
+5. Create config.yml with the correct home path and floating frame settings.
+6. Record with terminalizer.
+7. Render GIF into assets/terminalizer.
+8. Embed GIF in README.md.
+9. Commit and push.
