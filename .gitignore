@@ -1,0 +1,6 @@
+# Keep the profile repo public-facing and minimal.
+*
+!.gitignore
+!README.md
+!assets/
+!assets/**

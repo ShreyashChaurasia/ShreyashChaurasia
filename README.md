@@ -1,4 +1,6 @@
-```bash
+![Profile Terminal](assets/terminalizer/profile-terminal.gif)
+
+<!-- ```bash
 ShreyashChaurasia@github:~$ whoami
 Shreyash Chaurasia
 
@@ -37,4 +39,4 @@ ShreyashChaurasia@github:~$ tail -n 1 /var/log/development.log
 [INFO] Currently pushing the boundaries of AI-driven systems.
 
 ShreyashChaurasia@github:~$ echo "Stay curious, stay compiled."
-```
+``` -->
