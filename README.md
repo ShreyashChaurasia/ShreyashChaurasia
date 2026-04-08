@@ -1,4 +1,4 @@
-![Profile Terminal](assets/terminalizer/profile-terminal.gif)
+![Profile Terminal](assets/terminalizer/profile-terminal_upscaled_2.5x.gif)
 
 <!-- ```bash
 ShreyashChaurasia@github:~$ whoami
